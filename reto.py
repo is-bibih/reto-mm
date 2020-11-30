@@ -7,12 +7,13 @@ import librosa
 sample_rate = 11025
 
 # separate into bins
-n_bins = 254
+n_bins = 128
 # hearing range (herz)
 log_min = np.log2(1)
 log_max = np.log2(4096)
 # generate log spaced bins
 bin_limits = np.logspace(log_min, log_max, num=n_bins, base=2.0)
+bin_limits = bin_limits[1:]
 
 # parameters for fft
 framelength = 4096
@@ -36,13 +37,31 @@ def get_maxs(matrix, freqs, ranges=bin_limits):
     max_bins = [np.argmax(freq < ranges) for freq in max_freqs]
     return max_bins
 
+def make_new_bins(x, x_bins, new_bins=bin_limits):
+    _, n_cols = np.shape(x)
+    # see which frequencies belong to which bin
+    x_classes = np.digitize(x_bins, new_bins)
+    # get max amplitude in each bin 
+    new_x = np.zeros((len(new_bins), n_cols))
+    for i in range(len(new_bins)):
+        # get index of first class in bin
+        first = np.argmax(x_classes == i)
+        # get indices for classes in bin
+        idx = x_classes == i
+        if any(idx):
+            # index of max per column
+            max_idx = np.argmax(x[idx], axis=0)
+            # vector of classes with max values
+            new_x[i] = x_bins[max_idx + first]
+    return new_x
+
 def get_feature_vector(filename, sample_rate=sample_rate,
                        duration=None, n_fft=framelength,
                        hop_length=superpose, ranges=bin_limits):
     x, freqs = get_sfft(filename, sample_rate=sample_rate, duration=duration,
                         n_fft=framelength, hop_length=superpose)
-    features = get_maxs(x, freqs, ranges=ranges)
-    return np.array(features, dtype=int)
+    features = make_new_bins(x, freqs)
+    return np.array(features)
 
 def load_db(path):
     db = np.load(path, allow_pickle=True)
