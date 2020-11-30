@@ -1,14 +1,10 @@
 from reto import get_feature_vector, load_db
 import numpy as np
 
-song_path = 'starman.wav'
 db_path = 'db.npz'
 
 # load database
 db_dict = load_db(db_path)
-
-# get features for song
-features = get_feature_vector(song_path)
 
 # compare to database
 
@@ -95,6 +91,9 @@ def get_best_match(scores_dict):
     return key, scores_dict[key]
 
 # test
+#song_path = 'starman.wav'
+# get features for song
+#features = get_feature_vector(song_path)
 #match = get_first_match(features, db_dict)
 #print('first match is: ', match)
 #comparison = compare_all(features, db_dict, should_stop_early=False)
