@@ -64,9 +64,5 @@ def get_feature_vector(filename, sample_rate=sample_rate,
     return np.array(features)
 
 def load_db(path):
-    db = np.load(path, allow_pickle=True)
-    files = db['files']
-    features = [np.array(row, dtype=int) for row in db['features']]
-    return files, features
-
+    return np.load(path)
 
