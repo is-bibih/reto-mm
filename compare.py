@@ -1,13 +1,6 @@
 from reto import get_feature_vector, load_db
 import numpy as np
 
-db_path = 'db.npz'
-
-# load database
-db_dict = load_db(db_path)
-
-# compare to database
-
 # define similarity metric (l1 norm)
 def get_similarity(v1, v2):
     dif = np.cumsum(np.abs(v1 - v2))
@@ -91,9 +84,4 @@ def get_best_match(scores_dict):
     key = scores_dict.keys()[idx]
     return key, scores_dict[key]
 
-# test
-song_path = 'starman.wav'
-# get features for song
-features = get_feature_vector(song_path)
-for item in compare_all(features, db_dict).items(): print(item)
 
