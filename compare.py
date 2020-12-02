@@ -38,25 +38,26 @@ def convo(f, v1, v2, window=None, step=None, should_stop_early=True):
     i = 0
     value = 0
     same_count = 0
-    while (window + i*step < n_t1) and (same_count < 10):
+    while (window + i*step < n_t1) and (same_count < 5):
         # get columns corresponding to time window
         v1_i = v1[:, i*step : window + i*step]
-        # step counter
-        i += 1
         # initialize counter for the other matrix
         j = 0
-        # initialize variable to hold similarity score
-        dif = 1
-        while (window + j*step < n_t2) and dif:
+        while (window + j*step < n_t2) and (same_count < 5):
             v2_j = v2[:, j*step : window + j*step]
             j += 1
             dif = f(v1_i, v2_j)
-            if should_stop_early and dif == 0:
-                same_count += 1
+            if dif == 0:
+                i += 1
+                v1_i = v1[:, i*step : window + i*step]
+                if should_stop_early:
+                    same_count += 1
             else:
                 same_count = 0
                 value += dif
-    stopped_early = same_count > 9
+        # step counter
+        i += 1
+    stopped_early = same_count > 4
     return value, stopped_early
 
 # get first match
@@ -91,11 +92,8 @@ def get_best_match(scores_dict):
     return key, scores_dict[key]
 
 # test
-#song_path = 'starman.wav'
+song_path = 'starman.wav'
 # get features for song
-#features = get_feature_vector(song_path)
-#match = get_first_match(features, db_dict)
-#print('first match is: ', match)
-#comparison = compare_all(features, db_dict, should_stop_early=False)
-#for pair in comparison.items(): print(pair)
+features = get_feature_vector(song_path)
+for item in compare_all(features, db_dict).items(): print(item)
 
