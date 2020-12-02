@@ -155,6 +155,7 @@ def generate_db(dir_path, out_path):
     files = glob.glob(os.path.join(dir_path, '*.wav'))
     features = [0] * len(files)
     for i in range(len(files)):
+        print('Procesando {}/{}: {}...'.format(i + 1, len(files), files[i]))
         features[i] = get_feature_vector(files[i])
     db_dict = dict(zip(files, features))
     # save filenames and features to binary file 
