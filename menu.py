@@ -24,7 +24,7 @@ def menu():
     elif ans == 1: # identificar cancion
         song_path = input('\nIntroduce la ruta al archivo .wav\n')
         print('Procesando archivo...')
-        features = reto.get_feature_vector(song_path)
+        features = reto.get_feature_matrix(song_path)
         print('Archivo procesado.')
         db_path = input('\nIntroduce la ruta al achivo .npz de la base de datos.\n')
         print('Cargando base de datos...')

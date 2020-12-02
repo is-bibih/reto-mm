@@ -1,7 +1,6 @@
 import numpy as np
 import os
 import glob
-from librosa import display
 import librosa
 
 # ----- parametros para leer archivos de musica -----
