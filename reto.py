@@ -1,6 +1,4 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from scipy.fft import fft, fftfreq
 from librosa import display
 import librosa
 
