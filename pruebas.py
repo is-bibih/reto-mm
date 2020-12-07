@@ -6,7 +6,6 @@ import pandas as pd
 from timeit import timeit 
 
 # probar carga de cancion y sfft
-# probar para muchas canciones
 def test_load(file_list):
     results = np.zeros(len(file_list))
     for i, file in enumerate(file_list):
@@ -15,7 +14,6 @@ def test_load(file_list):
     return results
 
 # probar sacar matrices para cancion
-# probar para muchas canciones
 def test_matrices(file_list):
     results = np.zeros(len(file_list))
     for i, file in enumerate(file_list):
@@ -30,7 +28,7 @@ def test_load_db(db_path):
     return timeit(func, number=25)
 
 # probar comparar con base de datos
-# probar para muchas canciones
+# (con distintos tamaños)
 def test_compare(db):
     max_n = len(db)
     # matriz: [cantidad_comparada x cancion]
@@ -94,7 +92,6 @@ def test_mixed(db):
                 for (song, best, best_score) in results]
     return results
 
-# probar con orden distinto
 
 # probar con muestras pequeñas
 # al principio, medio y final
@@ -115,7 +112,6 @@ def test_short(db):
     return results
 
 # probar con ruido
-# probar con tres niveles
 def test_noisy(db):
     noisy_db = {}
     ran = np.random.default_rng()
@@ -125,30 +121,4 @@ def test_noisy(db):
         noise = ran.normal(scale=spread, size=np.shape(features))
         noisy_db[song] = np.abs(features + noise)
     return test_predict(noisy_db, db)
-
-
-# hacerlo
-files = glob.glob(os.path.join('db', '*.wav'))
-db_dict = dict(reto.load_db('db.npz'))
-del db_dict['./db/music_zapsplat_staring_through_midday.wav']
-del db_dict['./db/audio_hero_Black-Fedora_SIPML_J-0310.wav']
-del db_dict['./db/music_david_gwyn_jones_cheesy_christmas.wav']
-test_results = np.array(test_noisy(db_dict), dtype=object)
-print(test_results)
-np.savetxt('pruebas/noisy_sin_cheesy.csv',
-           test_results,
-           fmt=['%s', '%s', '%d'],
-           delimiter=',',
-           header='cancion,coincidencia,puntaje')
-#for res, name in zip(test_results, ('principio', 'mitad', 'final')):
-#    filename = 'pruebas/corto_{}.csv'.format(name)
-#    res = np.array(res, dtype=object)
-#    np.savetxt(filename,
-#               res,
-#               fmt=['%s', '%s', '%d'],
-#               delimiter=',',
-#               header='cancion,coincidencia,puntaje')
-#df = pd.DataFrame(test_results, columns=["Cancion", "Coincidencia", "Puntaje"], dtype="string")
-#df.to_csv('pruebas/comparar.csv')
-#del db_dict['./db/music_zapsplat_staring_through_midday.wav']
 
